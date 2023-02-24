@@ -1,3 +1,1 @@
-export default [
-  { name: 'room', type: 'glbModel', path: '/models/livingroom.glb' },
-];
+export default [{ name: 'tiles', type: 'glbModel', path: '/models/Tiles.glb' }];

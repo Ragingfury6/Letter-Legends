@@ -22,6 +22,7 @@ export default class Camera {
     this.renderer.toneMappingExposure = 1.75;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.setClearColor(new THREE.Color('#FFFFF0'), 1);
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(this.sizes.pixelRatio);
   }

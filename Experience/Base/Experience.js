@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import Sizes from './Utils/Sizes';
-import Time from './Utils/Time';
-import Resources from './Utils/Resources';
+import Sizes from '../Utils/Sizes';
+import Time from '../Utils/Time';
+import Resources from '../Utils/Resources';
 
 import Camera from './Camera';
 import Renderer from './Renderer';
-import World from './World/World';
-import assets from './Utils/assets';
+import World from '../World/World';
+import assets from '../Utils/assets';
 
 export default class Experience {
   static instance;

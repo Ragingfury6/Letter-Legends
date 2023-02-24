@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import Experience from '../Experience';
+import Experience from '../Base/Experience';
 export default class Resources extends EventEmitter {
   constructor(assets) {
     super();
@@ -36,7 +36,6 @@ export default class Resources extends EventEmitter {
   singleAssetLoaded(asset, file) {
     this.items[asset.name] = file;
     this.loaded++;
-    console.log(file);
     if (this.loaded === this.queue) {
       this.emit('ready');
     }
