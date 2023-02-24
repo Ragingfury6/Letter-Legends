@@ -1,4 +1,5 @@
 import Experience from './Experience';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 export default class Camera {
   constructor() {
@@ -9,8 +10,7 @@ export default class Camera {
 
     this.createPerspectiveCamera();
     this.createOrthographicCamera();
-    this.resize();
-    this.update();
+    this.setOrbitControls();
   }
   createPerspectiveCamera() {
     this.perspectiveCamera = new THREE.PerspectiveCamera(
@@ -20,6 +20,9 @@ export default class Camera {
       1000
     );
     this.scene.add(this.perspectiveCamera);
+    this.perspectiveCamera.position.x = 20;
+    this.perspectiveCamera.position.y = 20;
+    this.perspectiveCamera.position.z = 20;
   }
   createOrthographicCamera() {
     this.frustrum = 5;
@@ -33,6 +36,12 @@ export default class Camera {
     );
     this.scene.add(this.perspectiveCamera);
   }
+
+  setOrbitControls() {
+    this.controls = new OrbitControls(this.perspectiveCamera, this.canvas);
+    this.controls.enableDamping = true;
+  }
+
   resize() {
     this.perspectiveCamera.aspect = this.sizes.aspect;
     this.perspectiveCamera.updateProjectionMatrix();
@@ -46,5 +55,7 @@ export default class Camera {
     this.orthographicCamera.updateProjectionMatrix();
   }
 
-  update() {}
+  update() {
+    this.controls.update();
+  }
 }
