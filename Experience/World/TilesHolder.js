@@ -52,9 +52,9 @@ export default class TilesHolder {
       this.inventoryArrangement
     );
     tile.position.set(tilePosition.x, tilePosition.y, tilePosition.z);
-    console.log(tile.position);
-    this.scene.add(tile.clone());
-    this.inventory[this.nextOpenInventorySlot] = tile;
+    const clonedTile = tile.clone();
+    this.inventory[this.nextOpenInventorySlot] = clonedTile;
+    this.scene.add(clonedTile);
     this.nextOpenInventorySlot++;
   }
 

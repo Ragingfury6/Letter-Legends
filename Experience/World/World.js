@@ -29,5 +29,9 @@ export default class World {
 
   resize() {}
 
-  update() {}
+  update() {
+    if(this.gameBoard){
+      this.gameBoard.update();
+    }
+  }
 }
