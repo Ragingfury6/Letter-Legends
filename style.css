@@ -1,3 +1,8 @@
+:root{
+  --interface-width:max(35vw, 500px);
+  --interface-bg:#414040;
+  --interface-color:#eee;
+}
 *{
   margin: 0;
   padding: 0;
@@ -11,4 +16,48 @@
 .experience-canvas{
   width: 100%;
   height: 100%;
+}
+.money{
+  position: fixed;
+  top:1rem;
+  left:1rem;
+  font-size: 2rem;
+  font-family: system-ui;
+}
+.interface{
+  position: fixed;
+  width:var(--interface-width);
+  height:80vh;
+  right:calc(-1 * var(--interface-width));
+  top:10vh;
+  background:var(--interface-bg);
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  transition: 250ms ease-in-out right;
+  padding: 1rem;
+}
+.arrow{
+  position: absolute;
+  left:-2.5rem;
+  top:10%;
+  width:2.5rem;
+  height:5rem;
+  display: grid;
+  place-items: center;
+  background: var(--interface-bg);
+  color:var(--interface-color);
+  font-size:1.5rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.fa-arrow-left{
+  transition: 250ms ease-in-out transform 250ms;
+}
+.flip-y{
+  transform:rotateY(0.5turn);
+}
+.interface-in{
+  right:0;
 }

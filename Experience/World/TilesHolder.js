@@ -13,6 +13,7 @@ export default class TilesHolder {
       -2 / 2,
       (this.world.gameBoard.size - 20 + 10) * (type === Types.Player ? 1 : -1)
     );
+    this.type = type;
     this.inventoryArrangement = { x: 10, z: 5 };
     this.inventory = new Array(
       this.inventoryArrangement.x * this.inventoryArrangement.z
@@ -53,12 +54,22 @@ export default class TilesHolder {
     );
     tile.position.set(tilePosition.x, tilePosition.y, tilePosition.z);
     const clonedTile = tile.clone();
+    clonedTile.positionInInventory = this.nextOpenInventorySlot;
+    clonedTile.originalMaterial = clonedTile.material.clone();
+    clonedTile.playerType = this.type;
     this.inventory[this.nextOpenInventorySlot] = clonedTile;
     this.scene.add(clonedTile);
     this.nextOpenInventorySlot++;
   }
 
-  displayTilesInInventory() {}
+  updateTilePosition(index,intersectionPoint){
+      this.inventory[index].position.x =
+        2 * Math.round(intersectionPoint.x / 2);
+      this.inventory[index].position.y =
+        2 * Math.round(intersectionPoint.y / 2);
+      this.inventory[index].position.z =
+        2 * Math.round(intersectionPoint.z / 2);
+  }
 
   resize() {}
 

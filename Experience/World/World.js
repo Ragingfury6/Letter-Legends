@@ -3,10 +3,11 @@ import Environment from './Environment';
 import Tiles from './Tiles';
 import GameBoard from './GameBoard';
 import Types from '../Constants/Types';
-
-import * as THREE from 'three';
+import Raycaster from '../Utils/Raycaster';
 import TilesHolder from './TilesHolder';
 import Player from '../Player/Player';
+import UserInterface from './UserInterface';
+
 export default class World {
   constructor() {
     this.experience = new Experience();
@@ -24,14 +25,16 @@ export default class World {
       this.opponentTilesHolder = new TilesHolder(Types.Opponent);
       this.player = new Player(Types.Player);
       this.opponent = new Player(Types.Opponent);
+      this.raycaster = new Raycaster();
+      this.userInterface = new UserInterface();
     });
   }
 
   resize() {}
 
   update() {
-    if(this.gameBoard){
-      this.gameBoard.update();
+    if(this.raycaster){
+      this.raycaster.update();
     }
   }
 }

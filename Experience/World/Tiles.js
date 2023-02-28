@@ -1,6 +1,6 @@
-import Experience from '../Base/Experience';
-import * as THREE from 'three';
-import Types from '../Constants/Types';
+import Experience from "../Base/Experience";
+import * as THREE from "three";
+import Types from "../Constants/Types";
 export default class Tiles {
   constructor() {
     this.experience = new Experience();

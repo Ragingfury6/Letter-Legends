@@ -1,5 +1,4 @@
 import Experience from '../Base/Experience';
-import Raycaster from '../Utils/Raycaster';
 
 import * as THREE from 'three';
 export default class GameBoard {
@@ -7,6 +6,8 @@ export default class GameBoard {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.size = size;
+    this.inventory = [];
+    this.tilesPlayedOnThisTurn = [];
     this.initializeBoard();
 
   }
@@ -19,19 +20,23 @@ export default class GameBoard {
       this.gameBoardPlane,
       this.gameBoardMaterial
       );
+      this.gameBoard.name = "GameBoard";
       // this.gameBoard.rotation.x = -Math.PI / 2;
       this.scene.add(this.gameBoard);
+  }
 
-      this.raycaster = new Raycaster(this.gameBoard);
-      // this.raycaster.updatesEnabled = false;
+  addToInventory(tile){
+    this.inventory.push(tile);
+    this.tilesPlayedOnThisTurn.push(tile);
+  }
+
+  validateNewTilePosition(position){
+    if(this.inventory.length === 0) return true;
+    return this.inventory.every(item=>!item.object.position.equals(position));
   }
 
 
   resize() {}
 
-  update() {
-    // if(this.raycaster){
-    //   this.raycaster.update();
-    // }
-  }
+  update() {}
 }
