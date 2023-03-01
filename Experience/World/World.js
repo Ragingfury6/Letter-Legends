@@ -7,6 +7,7 @@ import Raycaster from '../Utils/Raycaster';
 import TilesHolder from './TilesHolder';
 import Player from '../Player/Player';
 import UserInterface from './UserInterface';
+import Socket from '../Base/Socket';
 
 export default class World {
   constructor() {
@@ -23,11 +24,17 @@ export default class World {
       this.gameBoard = new GameBoard(50);
       this.playerTilesHolder = new TilesHolder(Types.Player);
       this.opponentTilesHolder = new TilesHolder(Types.Opponent);
-      this.player = new Player(Types.Player);
-      this.opponent = new Player(Types.Opponent);
+      // this.player = new Player(Types.Player);
+      // this.opponent = new Player(Types.Opponent);
+      this.socket = new Socket();
       this.raycaster = new Raycaster();
       this.userInterface = new UserInterface();
     });
+  }
+
+  createPlayers(playerTiles, opponentTiles){
+    this.player = new Player(Types.Player, playerTiles);
+    this.opponent = new Player(Types.Opponent, opponentTiles);
   }
 
   resize() {}

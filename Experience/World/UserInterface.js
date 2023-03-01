@@ -3,21 +3,26 @@ import calculateDirectionOfPlay from "../Helpers/WordValidation/calculateDirecti
 import calculatePositionOfStartingLetter from "../Helpers/WordValidation/calculatePositionOfStartingLetter";
 import words from "../Constants/Words";
 import calculateWordMoney from "../Helpers/MoneyCalculation/calculateWordMoney";
+import Letters from "../Constants/Letters";
+import Player from "../Player/Player";
+import Types from "../Constants/Types";
 
 export default class UserInterface {
   constructor() {
     this.experience = new Experience();
     this.world = this.experience.world;
+    this.socket = this.world.socket;
     this.money = document.querySelector(".money");
 
     document
       .querySelector(".endTurn")
       .addEventListener("click", () => this.handleEndTurn());
-    // document
-    //   .querySelector(".socketStart")
-    //   .addEventListener("click", () => this.handleSocketConnection());
+    document
+      .querySelector(".socketStart")
+      .addEventListener("click", () => this.handleSocketConnection());
   }
   handleEndTurn() {
+    console.log(this.world.gameBoard.inventory, this.world.gameBoard.tilesPlayedOnThisTurn);
     const directionOfPlay = calculateDirectionOfPlay(
       this.world.gameBoard.tilesPlayedOnThisTurn
     );
@@ -96,9 +101,15 @@ export default class UserInterface {
       this.money.textContent = `$${totalMoney}`;
       this.money.setAttribute("data-value", totalMoney);
       this.world.gameBoard.tilesPlayedOnThisTurn = [];
+      // Emit a switch turn event
+      this.world.raycaster.updatesEnabled=false;
+      this.socket.emitSwitchTurn();
     }
   }
-  // handleSocketConnection(){
-  //   this.socket = 
-  // }
+  handleSocketConnection(){
+    const playerTiles = Letters.generateTiles(10);
+    const opponentTiles = Letters.generateTiles(10);
+    this.world.createPlayers(playerTiles,opponentTiles);
+    this.socket.emitGameStart(opponentTiles,playerTiles);
+  }
 }

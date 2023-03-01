@@ -9,6 +9,7 @@ export default class Raycaster {
     this.scene = this.experience.scene;
     this.world = this.experience.world;
     this.sizes = this.experience.sizes;
+    this.socket = this.world.socket;
     this.raycaster = new THREE.Raycaster();
     this.raycaster.params.Line.threshold = 1;
     this.raycaster.params.Points.threshold = 1;
@@ -40,12 +41,15 @@ export default class Raycaster {
       }else if(this.raycastingState === RaycastingState.GameBoardHover){
         const isValid = this.world.gameBoard.validateNewTilePosition(this.intersectingTile.object.position);
         if(isValid && this.hasMovedMouseToValidPosition){
+          // Tile has been successfully played
           this.raycastingState = RaycastingState.TileClick;
           this.world.gameBoard.addToInventory(this.intersectingTile);
           this.hasMovedMouseToValidPosition = false;
           this.intersectingTile.object.material = this.intersectingTile.object.originalMaterial;
           this.intersectingTile.object.hasBeenPlayed = true;
           this.world.playerTilesHolder.nextOpenInventorySlot = Math.min(this.world.playerTilesHolder.nextOpenInventorySlot,this.intersectingTile.object.positionInInventory);
+          // emit to opponent
+          this.socket.emitTilePlayed(this.intersectingTile);
         }
       }
     }

@@ -7,7 +7,6 @@ import Camera from './Camera';
 import Renderer from './Renderer';
 import World from '../World/World';
 import assets from '../Utils/assets';
-import Socket  from "../Base/Socket";
 
 export default class Experience {
   static instance;
@@ -24,7 +23,7 @@ export default class Experience {
     this.renderer = new Renderer();
     this.resources = new Resources(assets);
     this.world = new World();
-    this.socket = new Socket();
+    
 
     this.time.on('update', () => {
       this.update();
