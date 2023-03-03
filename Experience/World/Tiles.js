@@ -1,6 +1,6 @@
-import Experience from "../Base/Experience";
-import * as THREE from "three";
-import Types from "../Constants/Types";
+import Experience from '../Base/Experience';
+import * as THREE from 'three';
+import Types from '../Constants/Types';
 export default class Tiles {
   constructor() {
     this.experience = new Experience();
@@ -25,12 +25,22 @@ export default class Tiles {
   retreiveTileByLetterName(letter) {
     return this.tiles.find((tile) => tile.name === letter);
   }
-  fillInventoryWithTileByLetterName(letter, player) {
+  fillInventoryWithTileByLetterName(letter, player, delay = 0.5) {
     const currentTile = this.tiles.find((tile) => tile.name === letter);
     if (player === Types.Player) {
-      this.world.playerTilesHolder.addToInventory(currentTile);
+      this.world.playerTilesHolder.addToInventory(
+        currentTile,
+        false,
+        true,
+        delay
+      );
     } else if (player === Types.Opponent) {
-      this.world.opponentTilesHolder.addToInventory(currentTile);
+      this.world.opponentTilesHolder.addToInventory(
+        currentTile,
+        false,
+        true,
+        delay
+      );
     }
   }
 

@@ -10,8 +10,8 @@ export default class Player {
     this.scene = this.experience.scene;
     this.type = type;
     this.tiles = [];
-    startingTiles.forEach((t) => {
-      this.allTiles.fillInventoryWithTileByLetterName(t, this.type);
+    startingTiles.forEach((t, idx) => {
+      this.allTiles.fillInventoryWithTileByLetterName(t, this.type, idx / 4);
     });
   }
 

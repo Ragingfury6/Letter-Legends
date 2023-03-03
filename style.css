@@ -1,5 +1,5 @@
 :root{
-  --interface-width:max(35vw, 500px);
+  --interface-width:max(25vw, 500px);
   --interface-bg:#414040;
   --interface-color:#eee;
 }
