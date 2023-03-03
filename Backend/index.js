@@ -22,6 +22,15 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("Letter Played", tile);
   });
 
+  // Letter is removed from player, opponent is receiving
+  socket.on("Letter Removed", ({position})=>{
+    socket.broadcast.emit("Letter Removed", {position});
+  });
+
+  socket.on("Fill Tiles", (letters)=>{
+    socket.broadcast.emit("Fill Tiles", letters);
+  })
+
   socket.on("Game Start", (tiles)=>{
     socket.broadcast.emit("Game Start", tiles);
   });

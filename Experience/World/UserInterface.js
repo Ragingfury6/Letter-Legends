@@ -11,6 +11,7 @@ export default class UserInterface {
   constructor() {
     this.experience = new Experience();
     this.world = this.experience.world;
+    this.allTiles = this.world.tiles;
     this.socket = this.world.socket;
     this.money = document.querySelector(".money");
 
@@ -22,13 +23,13 @@ export default class UserInterface {
       .addEventListener("click", () => this.handleSocketConnection());
   }
   handleEndTurn() {
-    console.log(this.world.gameBoard.inventory, this.world.gameBoard.tilesPlayedOnThisTurn);
+    console.log(this.world.playerTilesHolder.nextOpenInventorySlot);
     const directionOfPlay = calculateDirectionOfPlay(
       this.world.gameBoard.tilesPlayedOnThisTurn
     );
     const oppositeDirection = directionOfPlay === "x" ? "z" : "x";
     let positionOfStartingLetter = calculatePositionOfStartingLetter(
-      this.world.gameBoard.tilesPlayedOnThisTurn[0].object.position,
+      this.world.gameBoard.tilesPlayedOnThisTurn[0].position,
       this.world.gameBoard,
       directionOfPlay,
       oppositeDirection
@@ -42,17 +43,17 @@ export default class UserInterface {
       if (
         this.world.gameBoard.inventory.find(
           (t) =>
-            t.object.position[directionOfPlay] ===
+            t.position[directionOfPlay] ===
               positionOfStartingLetter[directionOfPlay] &&
             Math.abs(
               positionOfStartingLetter[oppositeDirection] -
-                t.object.position[oppositeDirection]
+                t.position[oppositeDirection]
             ) === 2
         ) &&
         this.world.gameBoard.tilesPlayedOnThisTurn.find(
           (t) =>
-            t.object.position.x === positionOfStartingLetter.x &&
-            t.object.position.z === positionOfStartingLetter.z
+            t.position.x === positionOfStartingLetter.x &&
+            t.position.z === positionOfStartingLetter.z
         )
       ) {
         let newPosition = calculatePositionOfStartingLetter(
@@ -68,12 +69,12 @@ export default class UserInterface {
           newPosition[oppositeDirection] += 2;
           newNextLetter = this.world.gameBoard.inventory.find(
             (t) =>
-              t.object.position[oppositeDirection] ===
+              t.position[oppositeDirection] ===
                 newPosition[oppositeDirection] &&
-              t.object.position[directionOfPlay] ===
+              t.position[directionOfPlay] ===
                 newPosition[directionOfPlay]
           );
-          if (newNextLetter) newPosition.letter = newNextLetter.object.name;
+          if (newNextLetter) newPosition.letter = newNextLetter.name;
         } while (newNextLetter);
         crossAxisWords.push(newWord.join(""));
       }
@@ -81,12 +82,12 @@ export default class UserInterface {
       positionOfStartingLetter[directionOfPlay] += 2;
       nextLetter = this.world.gameBoard.inventory.find(
         (t) =>
-          t.object.position[directionOfPlay] ===
+          t.position[directionOfPlay] ===
             positionOfStartingLetter[directionOfPlay] &&
-          t.object.position[oppositeDirection] ===
+          t.position[oppositeDirection] ===
             positionOfStartingLetter[oppositeDirection]
       );
-      if (nextLetter) positionOfStartingLetter.letter = nextLetter.object.name;
+      if (nextLetter) positionOfStartingLetter.letter = nextLetter.name;
     } while (nextLetter);
     crossAxisWords.push(mainAxisWord.join(""));
     const allWords = [...crossAxisWords];
@@ -104,6 +105,11 @@ export default class UserInterface {
       // Emit a switch turn event
       this.world.raycaster.updatesEnabled=false;
       this.socket.emitSwitchTurn();
+      // Add new tiles to inventory
+      const generatedTiles = Letters.generateTiles(5);
+      generatedTiles.forEach(t=>this.allTiles.fillInventoryWithTileByLetterName(t, Types.Player));
+      console.log(this.world.gameBoard);
+      this.socket.emitFillTiles(generatedTiles);
     }
   }
   handleSocketConnection(){

@@ -32,10 +32,19 @@ export default class GameBoard {
     this.tilesPlayedOnThisTurn.push(tile);
   }
 
+  findTileByPosition(position){
+    return this.inventory.find(t=>t.position.equals(position));
+  }
+
+  removeFromInventory(position){
+    this.inventory = this.inventory.filter(t=>!(t.position.equals(position)));
+    this.tilesPlayedOnThisTurn = this.tilesPlayedOnThisTurn.filter(t=>!(t.position.equals(position)));
+  }
+
   validateNewTilePosition(position) {
     if (this.inventory.length === 0) return true;
     return this.inventory.every(
-      (item) => !item.object.position.equals(position)
+      (item) => !item.position.equals(position)
     );
   }
 

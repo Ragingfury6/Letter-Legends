@@ -1,7 +1,8 @@
-import Experience from '../Base/Experience';
-import Types from '../Constants/Types';
-import calculateWorldPositionFromInventorySlot from '../Helpers/calculateWorldPositionFromInventorySlot';
-import * as THREE from 'three';
+import Experience from "../Base/Experience";
+import Types from "../Constants/Types";
+import calculateWorldPositionFromInventorySlot from "../Helpers/calculateWorldPositionFromInventorySlot";
+import * as THREE from "three";
+import gsap from "gsap";
 export default class TilesHolder {
   constructor(type) {
     this.experience = new Experience();
@@ -15,10 +16,8 @@ export default class TilesHolder {
     );
     this.type = type;
     this.inventoryArrangement = { x: 10, z: 5 };
-    this.inventory = new Array(
-      this.inventoryArrangement.x * this.inventoryArrangement.z
-    ).fill(null);
-    this.nextOpenInventorySlot = 0;
+    this.inventory = [];
+    this.nextOpenInventorySlot = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     this.initializeHolder();
   }
   initializeHolder() {
@@ -28,7 +27,7 @@ export default class TilesHolder {
       this.size.z
     );
     this.tileHolderMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#ddd'),
+      color: new THREE.Color("#ddd"),
     });
     this.tileHolder = new THREE.Mesh(
       this.tileHolderGeometry,
@@ -42,9 +41,9 @@ export default class TilesHolder {
     this.scene.add(this.tileHolder);
   }
 
-  addToInventory(tile) {
-    const tilePosition = calculateWorldPositionFromInventorySlot(
-      this.nextOpenInventorySlot,
+  calculateTilePositionFromInventory() {
+    return calculateWorldPositionFromInventorySlot(
+      this.nextOpenInventorySlot[0],
       // Subtract by size / 2 to start at the top left corner
       this.position.x - this.size.x / 2,
       this.position.z - this.size.z / 2,
@@ -52,23 +51,59 @@ export default class TilesHolder {
       this.size.z,
       this.inventoryArrangement
     );
-    tile.position.set(tilePosition.x, tilePosition.y, tilePosition.z);
-    const clonedTile = tile.clone();
-    clonedTile.positionInInventory = this.nextOpenInventorySlot;
-    clonedTile.originalMaterial = clonedTile.material.clone();
-    clonedTile.playerType = this.type;
-    this.inventory[this.nextOpenInventorySlot] = clonedTile;
-    this.scene.add(clonedTile);
-    this.nextOpenInventorySlot++;
   }
 
-  updateTilePosition(index,intersectionPoint){
-      this.inventory[index].position.x =
-        2 * Math.round(intersectionPoint.x / 2);
-      this.inventory[index].position.y =
-        2 * Math.round(intersectionPoint.y / 2);
-      this.inventory[index].position.z =
-        2 * Math.round(intersectionPoint.z / 2);
+  findNextOpenSlot() {
+    if (this.nextOpenInventorySlot[0] === undefined) {
+      this.nextOpenInventorySlot[0] = this.inventory.length;
+    }
+    return this.nextOpenInventorySlot[0];
+  }
+
+  addToInventory(tile, existing = false) {
+    this.findNextOpenSlot();
+    const tilePosition = this.calculateTilePositionFromInventory();
+    const clonedTile = existing ? tile : tile.clone();
+    if (existing) {
+      gsap.to(clonedTile.position, {
+        x: tilePosition.x,
+        y: tilePosition.y,
+        z: tilePosition.z,
+        duration: 1,
+      });
+    }else{
+      clonedTile.position.set(tilePosition.x, tilePosition.y, tilePosition.z);
+    }
+    clonedTile.positionInInventory = this.nextOpenInventorySlot[0];
+    clonedTile.originalMaterial = clonedTile.material.clone();
+    clonedTile.playerType = this.type;
+    this.inventory[this.nextOpenInventorySlot[0]] = clonedTile;
+    if(!existing) this.scene.add(clonedTile);
+    this.nextOpenInventorySlot.shift();
+  }
+
+  removeFromInventory(positionInInventory) {
+    this.inventory[positionInInventory] = null;
+  }
+
+  addSlotAndSort(position) {
+    this.nextOpenInventorySlot.push(position);
+    this.nextOpenInventorySlot.sort((a, b) => {
+      if (a - b < 0) return -1;
+      if (a - b > 0) return 1;
+      return 0;
+    });
+  }
+
+  updateTilePosition(index, intersectionPoint, animate=false) {
+    const newPosition = new THREE.Vector3(2 * Math.round(intersectionPoint.x / 2), 2 * Math.round(intersectionPoint.y / 2), 2 * Math.round(intersectionPoint.z / 2));
+    if(animate){
+      gsap.to(this.inventory[index].position, {x:newPosition.x,y:newPosition.y,z:newPosition.z, duration:1});
+    }else{
+      this.inventory[index].position.x = newPosition.x;
+      this.inventory[index].position.y = newPosition.y;
+      this.inventory[index].position.z = newPosition.z;
+    }
   }
 
   resize() {}
