@@ -35,7 +35,7 @@ export default class Socket {
       const removedTile = this.world.gameBoard.findTileByPosition(position);
       if (removedTile) {
         this.world.gameBoard.removeFromInventory(position);
-        this.world.opponentTilesHolder.addToInventory(removedTile, true, false);
+        this.world.opponentTilesHolder.addToInventory(removedTile, true, false,0);
       }
     });
 

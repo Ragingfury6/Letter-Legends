@@ -66,7 +66,7 @@ export default class TilesHolder {
     const tilePosition = this.calculateTilePositionFromInventory();
     const clonedTile = existing ? tile : tile.clone();
     // temp for animation testing
-    if (animated) clonedTile.position.copy(new Vector3(0, 0, 0));
+    if (animated) clonedTile.position.copy(new Vector3(0, 50, 0));
     if (existing || animated) {
       gsap.to(clonedTile.position, {
         x: tilePosition.x,

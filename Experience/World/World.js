@@ -43,5 +43,8 @@ export default class World {
     if(this.raycaster){
       this.raycaster.update();
     }
+    if(this.gameBoard){
+      this.gameBoard.update();
+    }
   }
 }

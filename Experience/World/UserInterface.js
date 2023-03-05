@@ -6,10 +6,12 @@ import calculateWordMoney from '../Helpers/MoneyCalculation/calculateWordMoney';
 import Letters from '../Constants/Letters';
 import Player from '../Player/Player';
 import Types from '../Constants/Types';
+import Curves from '../Constants/Curves';
 
 export default class UserInterface {
   constructor() {
     this.experience = new Experience();
+    this.controls = this.experience.controls;
     this.world = this.experience.world;
     this.allTiles = this.world.tiles;
     this.socket = this.world.socket;
@@ -34,9 +36,11 @@ export default class UserInterface {
       directionOfPlay,
       oppositeDirection
     );
-    let nextLetter;
+    let nextLetterIdx = -1;
     let mainAxisWord = [];
     let crossAxisWords = [];
+    let indexesFromGameboard = [];
+    indexesFromGameboard.push(positionOfStartingLetter.idx);
     do {
       mainAxisWord.push(positionOfStartingLetter.letter);
 
@@ -62,32 +66,40 @@ export default class UserInterface {
           oppositeDirection,
           directionOfPlay
         );
-        let newNextLetter;
+        indexesFromGameboard.push(newPosition.idx);
+        let newNextLetterIdx = -1;
         const newWord = [];
         do {
           newWord.push(newPosition.letter);
           newPosition[oppositeDirection] += 2;
-          newNextLetter = this.world.gameBoard.inventory.find(
+          newNextLetterIdx = this.world.gameBoard.inventory.findIndex(
             (t) =>
               t.position[oppositeDirection] ===
                 newPosition[oppositeDirection] &&
               t.position[directionOfPlay] === newPosition[directionOfPlay]
           );
-          if (newNextLetter) newPosition.letter = newNextLetter.name;
-        } while (newNextLetter);
+          if (newNextLetterIdx !== -1) {
+            console.log(newNextLetterIdx);
+            newPosition.letter = this.world.gameBoard.inventory[newNextLetterIdx].name;
+            indexesFromGameboard.push(newNextLetterIdx);
+          };
+        } while (newNextLetterIdx !== -1);
         crossAxisWords.push(newWord.join(''));
       }
 
       positionOfStartingLetter[directionOfPlay] += 2;
-      nextLetter = this.world.gameBoard.inventory.find(
+      nextLetterIdx = this.world.gameBoard.inventory.findIndex(
         (t) =>
           t.position[directionOfPlay] ===
             positionOfStartingLetter[directionOfPlay] &&
           t.position[oppositeDirection] ===
             positionOfStartingLetter[oppositeDirection]
       );
-      if (nextLetter) positionOfStartingLetter.letter = nextLetter.name;
-    } while (nextLetter);
+      if (nextLetterIdx !== -1) {
+        positionOfStartingLetter.letter = this.world.gameBoard.inventory[nextLetterIdx].name;
+        indexesFromGameboard.push(nextLetterIdx);
+      };
+    } while (nextLetterIdx !== -1);
     crossAxisWords.push(mainAxisWord.join(''));
     const allWords = [...crossAxisWords];
     console.log(allWords);
@@ -105,7 +117,7 @@ export default class UserInterface {
       this.world.raycaster.updatesEnabled = false;
       this.socket.emitSwitchTurn();
       // Add new tiles to inventory
-      const generatedTiles = Letters.generateTiles(5);
+      const generatedTiles = Letters.generateTiles(4);
       generatedTiles.forEach((t, idx) =>
         this.allTiles.fillInventoryWithTileByLetterName(
           t,
@@ -113,8 +125,11 @@ export default class UserInterface {
           idx / 4
         )
       );
-      console.log(this.world.gameBoard);
+      this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, true);
+      this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true)
       this.socket.emitFillTiles(generatedTiles);
+    }else{
+      this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, false);
     }
   }
   handleSocketConnection() {

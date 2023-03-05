@@ -7,6 +7,7 @@ import Camera from './Camera';
 import Renderer from './Renderer';
 import World from '../World/World';
 import assets from '../Utils/assets';
+import Controls from './Controls';
 
 export default class Experience {
   static instance;
@@ -23,6 +24,7 @@ export default class Experience {
     this.renderer = new Renderer();
     this.resources = new Resources(assets);
     this.world = new World();
+    this.controls = new Controls();
     
 
     this.time.on('update', () => {
@@ -37,6 +39,7 @@ export default class Experience {
     this.camera.update();
     this.renderer.update();
     this.world.update();
+    // this.controls.update();
   }
   resize() {
     this.camera.resize();

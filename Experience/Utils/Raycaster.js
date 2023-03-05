@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import Experience from '../Base/Experience';
+import Curves from '../Constants/Curves';
 import RaycastingState from '../Constants/RaycastingState';
+import calculateFinalCameraPositionForTilePlayAnimation from '../Helpers/CameraAnimation/calculateFinalCameraPositionForTilePlayAnimation';
 import Types from '../Constants/Types';
 import PulsatingShader from '../Shaders/PulsatingShader';
 export default class Raycaster {
@@ -8,6 +10,7 @@ export default class Raycaster {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.world = this.experience.world;
+    this.controls = this.experience.controls;
     this.sizes = this.experience.sizes;
     this.socket = this.world.socket;
     this.raycaster = new THREE.Raycaster();
@@ -60,6 +63,7 @@ export default class Raycaster {
           this.world.playerTilesHolder.removeFromInventory(
             this.intersectingTile.object.positionInInventory
           );
+          this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true);
           // emit to opponent
           // this.socket.emitTilePlayed(this.intersectingTile);
           const tile = {
@@ -98,7 +102,8 @@ export default class Raycaster {
           this.world.playerTilesHolder.addToInventory(
             this.intersectingTile.object,
             true,
-            false
+            false,
+            0
           );
         }
       }
@@ -159,6 +164,8 @@ export default class Raycaster {
             this.raycastingState = isRemovingTileFromGameBoard
               ? RaycastingState.TileClick
               : RaycastingState.GameBoardHover;
+            const animateTo = calculateFinalCameraPositionForTilePlayAnimation(this.world.gameBoard.getLastPlayedTile());
+            this.controls.beginAnimationFromCamera(animateTo);
           }
         }
       }
