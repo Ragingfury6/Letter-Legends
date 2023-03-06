@@ -103,7 +103,8 @@ export default class UserInterface {
     crossAxisWords.push(mainAxisWord.join(''));
     const allWords = [...crossAxisWords];
     console.log(allWords);
-    if (allWords.every((w) => words.includes(w))) {
+    //w.length===1 bc of playing 1 tile glitches into two words
+    if (allWords.every((w) => words.includes(w) || w.length===1)) {
       const moneyEarned = allWords.reduce(
         (a, e) => a + calculateWordMoney(e),
         0

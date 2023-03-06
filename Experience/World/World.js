@@ -8,6 +8,7 @@ import TilesHolder from './TilesHolder';
 import Player from '../Player/Player';
 import UserInterface from './UserInterface';
 import Socket from '../Base/Socket';
+import Table from './Table';
 
 export default class World {
   constructor() {
@@ -22,6 +23,7 @@ export default class World {
       this.environment = new Environment();
       this.tiles = new Tiles();
       this.gameBoard = new GameBoard(50);
+      this.table = new Table();
       this.playerTilesHolder = new TilesHolder(Types.Player);
       this.opponentTilesHolder = new TilesHolder(Types.Opponent);
       // this.player = new Player(Types.Player);

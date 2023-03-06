@@ -86,7 +86,8 @@ export default class Raycaster {
       this.raycastingState = RaycastingState.TileClick;
       this.updateRaycast();
       if (this.intersectingTile) {
-        if (this.intersectingTile.object.hasBeenPlayed === true) {
+        const playedThisTurn = this.world.gameBoard.tilesPlayedOnThisTurn.some(t=>t.position.equals(this.intersectingTile.object.position));
+        if (this.intersectingTile.object.hasBeenPlayed === true && playedThisTurn) {
           this.intersectingTile.object.hasBeenPlayed = false;
           // remove from gameboard
           const removedPosition = this.intersectingTile.object.position;
