@@ -3,20 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://kit.fontawesome.com/98a50fb53a.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/98a50fb53a.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <title>PolyWord</title>
   </head>
   <body>
+    <ul class="start-screen">
+      <div class="start-screen-content">
+        <li class="socketStart">Start</li>
+        <li class="instructions">Instructions</li>
+        <li>Quit</li>
+      </div>
+      <div class="start-screen-instructions">
+        <div class="back"><i class="fa-solid fa-arrow-left"></i></div>
+        <h2>Instructions</h2>
+        <ul>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima
+            delectus dicta velit consectetur consequatur sint sed numquam,
+            ratione id dolorem.
+          </li>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima
+            delectus dicta velit consectetur consequatur sint sed numquam,
+            ratione id dolorem.
+          </li>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima
+            delectus dicta velit consectetur consequatur sint sed numquam,
+            ratione id dolorem.
+          </li>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima
+            delectus dicta velit consectetur consequatur sint sed numquam,
+            ratione id dolorem.
+          </li>
+        </ul>
+      </div>
+    </ul>
     <div class="experience">
       <canvas class="experience-canvas"></canvas>
     </div>
-    <div class="money" data-value=0>$0</div>
+    <div class="money" data-value="0">$0</div>
     <div class="interface">
       <div class="arrow">
         <i class="fa-solid fa-arrow-left"></i>
       </div>
       <button class="endTurn">End Turn</button>
-      <button class="socketStart">Start</button>
+      <button class="">Start</button>
     </div>
     <script type="module" src="/main.js"></script>
   </body>

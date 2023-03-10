@@ -17,12 +17,21 @@ export default class UserInterface {
     this.socket = this.world.socket;
     this.money = document.querySelector('.money');
 
+    this.startScreen = document.querySelector('.start-screen');
+    this.startScreenContent = document.querySelector('.start-screen-content');
+    this.startScreenInstructions = document.querySelector(
+      '.start-screen-instructions'
+    );
+
     document
       .querySelector('.endTurn')
       .addEventListener('click', () => this.handleEndTurn());
     document
       .querySelector('.socketStart')
       .addEventListener('click', () => this.handleSocketConnection());
+    document
+      .querySelector('.instructions')
+      .addEventListener('click', () => this.handleInstructions());
   }
   handleEndTurn() {
     console.log(this.world.playerTilesHolder.nextOpenInventorySlot);
@@ -80,9 +89,10 @@ export default class UserInterface {
           );
           if (newNextLetterIdx !== -1) {
             console.log(newNextLetterIdx);
-            newPosition.letter = this.world.gameBoard.inventory[newNextLetterIdx].name;
+            newPosition.letter =
+              this.world.gameBoard.inventory[newNextLetterIdx].name;
             indexesFromGameboard.push(newNextLetterIdx);
-          };
+          }
         } while (newNextLetterIdx !== -1);
         crossAxisWords.push(newWord.join(''));
       }
@@ -96,15 +106,16 @@ export default class UserInterface {
             positionOfStartingLetter[oppositeDirection]
       );
       if (nextLetterIdx !== -1) {
-        positionOfStartingLetter.letter = this.world.gameBoard.inventory[nextLetterIdx].name;
+        positionOfStartingLetter.letter =
+          this.world.gameBoard.inventory[nextLetterIdx].name;
         indexesFromGameboard.push(nextLetterIdx);
-      };
+      }
     } while (nextLetterIdx !== -1);
     crossAxisWords.push(mainAxisWord.join(''));
     const allWords = [...crossAxisWords];
     console.log(allWords);
     //w.length===1 bc of playing 1 tile glitches into two words
-    if (allWords.every((w) => words.includes(w) || w.length===1)) {
+    if (allWords.every((w) => words.includes(w) || w.length === 1)) {
       const moneyEarned = allWords.reduce(
         (a, e) => a + calculateWordMoney(e),
         0
@@ -127,16 +138,31 @@ export default class UserInterface {
         )
       );
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, true);
-      this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true)
+      this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true);
       this.socket.emitFillTiles(generatedTiles);
-    }else{
+    } else {
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, false);
     }
   }
   handleSocketConnection() {
-    const playerTiles = Letters.generateTiles(10);
-    const opponentTiles = Letters.generateTiles(10);
-    this.world.createPlayers(playerTiles, opponentTiles);
-    this.socket.emitGameStart(opponentTiles, playerTiles);
+    this.startScreen.classList.add('opacity-0');
+    this.startScreen.addEventListener('transitionend', () => {
+      this.startScreen.classList.add('hidden');
+      const playerTiles = Letters.generateTiles(10);
+      const opponentTiles = Letters.generateTiles(10);
+      this.world.createPlayers(playerTiles, opponentTiles);
+      this.socket.emitGameStart(opponentTiles, playerTiles);
+    });
+  }
+  handleInstructions() {
+    this.startScreen.classList.add('zoomed');
+    this.startScreenContent.classList.add('opacity-0');
+    this.startScreenContent.addEventListener('transitionend', () => {
+      this.startScreenContent.classList.add('hidden');
+      this.startScreenInstructions.classList.add('shown');
+      setTimeout(() => {
+        this.startScreenInstructions.classList.add('opacity-100');
+      }, 250);
+    });
   }
 }
