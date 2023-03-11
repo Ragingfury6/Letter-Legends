@@ -7,6 +7,8 @@ import Letters from '../Constants/Letters';
 import Player from '../Player/Player';
 import Types from '../Constants/Types';
 import Curves from '../Constants/Curves';
+import gsap from 'gsap';
+import { SlowMo } from 'gsap/all';
 
 export default class UserInterface {
   constructor() {
@@ -22,6 +24,7 @@ export default class UserInterface {
     this.startScreenInstructions = document.querySelector(
       '.start-screen-instructions'
     );
+    this.backButton = document.querySelector(".back");
 
     document
       .querySelector('.endTurn')
@@ -32,6 +35,7 @@ export default class UserInterface {
     document
       .querySelector('.instructions')
       .addEventListener('click', () => this.handleInstructions());
+      this.backButton.addEventListener("click", () => this.handleBackButton());
   }
   handleEndTurn() {
     console.log(this.world.playerTilesHolder.nextOpenInventorySlot);
@@ -139,30 +143,50 @@ export default class UserInterface {
       );
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, true);
       this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true);
+      this.world.incrementRound();
+      this.displayTurnOverlay(Types.Opponent, this.world.round);
       this.socket.emitFillTiles(generatedTiles);
     } else {
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, false);
     }
   }
   handleSocketConnection() {
-    this.startScreen.classList.add('opacity-0');
-    this.startScreen.addEventListener('transitionend', () => {
-      this.startScreen.classList.add('hidden');
+    this.removeStartScreen(()=>{
       const playerTiles = Letters.generateTiles(10);
       const opponentTiles = Letters.generateTiles(10);
       this.world.createPlayers(playerTiles, opponentTiles);
       this.socket.emitGameStart(opponentTiles, playerTiles);
+      this.displayTurnOverlay(Types.Player, 1);
+    })
+  }
+  displayTurnOverlay(turn, round){
+    document.querySelector(".turn-overlay > h2").textContent = `Round ${Math.floor(round)} / 30`;
+    document.querySelector(".turn-overlay > p").textContent = `${turn === Types.Player ? "Your" : "Opponent\'s"} Turn`;
+    gsap.fromTo('.turn-overlay', {xPercent:0}, {xPercent:200, duration:4, ease:SlowMo.ease.config(0.1,0.9), delay:2});
+  }
+  removeStartScreen(afterTransition){
+    this.startScreen.classList.add('opacity-0');
+    this.startScreen.addEventListener('transitionend', () => {
+      this.startScreen.classList.add('hidden');
+      afterTransition();
     });
   }
   handleInstructions() {
     this.startScreen.classList.add('zoomed');
-    this.startScreenContent.classList.add('opacity-0');
-    this.startScreenContent.addEventListener('transitionend', () => {
-      this.startScreenContent.classList.add('hidden');
-      this.startScreenInstructions.classList.add('shown');
-      setTimeout(() => {
-        this.startScreenInstructions.classList.add('opacity-100');
-      }, 250);
-    });
+    this.startScreenContent.classList.add('shift-right');
+    const shiftLeft = () =>  {
+      this.startScreenInstructions.classList.remove('shift-left');
+      this.startScreenContent.removeEventListener('transitionend', shiftLeft);
+  };
+    this.startScreenContent.addEventListener('transitionend', shiftLeft);
+  }
+  handleBackButton(){
+    this.startScreenInstructions.classList.add('shift-left');
+    const shiftLeft = () =>  {
+      this.startScreenContent.classList.remove('shift-right');
+      this.startScreenInstructions.removeEventListener('transitionend', shiftLeft);
+      this.startScreen.classList.remove('zoomed');
+  };
+    this.startScreenInstructions.addEventListener('transitionend', shiftLeft);
   }
 }

@@ -17,6 +17,7 @@ export default class World {
     this.scene = this.experience.scene;
     this.canvas = this.experience.canvas;
     this.camera = this.experience.camera;
+    this.round = 1;
 
     this.resources = this.experience.resources;
     this.resources.on('ready', () => {
@@ -37,6 +38,11 @@ export default class World {
   createPlayers(playerTiles, opponentTiles){
     this.player = new Player(Types.Player, playerTiles);
     this.opponent = new Player(Types.Opponent, opponentTiles);
+  }
+
+  incrementRound() {
+    // One round = Both players play
+    this.round+=0.5;
   }
 
   resize() {}

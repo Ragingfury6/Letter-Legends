@@ -11,13 +11,17 @@
     <title>PolyWord</title>
   </head>
   <body>
+    <div class="turn-overlay">
+      <h2>Round 1 / 30</h2>
+      <p>Your Turn</p>
+    </div>
     <ul class="start-screen">
-      <div class="start-screen-content">
+      <div class="start-screen-content shift-center">
         <li class="socketStart">Start</li>
         <li class="instructions">Instructions</li>
         <li>Quit</li>
       </div>
-      <div class="start-screen-instructions">
+      <div class="start-screen-instructions shift-left">
         <div class="back"><i class="fa-solid fa-arrow-left"></i></div>
         <h2>Instructions</h2>
         <ul>
@@ -50,10 +54,9 @@
     <div class="money" data-value="0">$0</div>
     <div class="interface">
       <div class="arrow">
-        <i class="fa-solid fa-arrow-left"></i>
+        <i class="fa-solid fa-arrow-left ui-arrow"></i>
       </div>
       <button class="endTurn">End Turn</button>
-      <button class="">Start</button>
     </div>
     <script type="module" src="/main.js"></script>
   </body>

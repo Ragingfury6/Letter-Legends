@@ -55,10 +55,16 @@ export default class Socket {
       this.world.createPlayers(playerTiles, opponentTiles);
       // Disable Raycaster (so opponent can't play - not his turn)
       this.world.raycaster.updatesEnabled = false;
+      // Remove his start screen
+      this.world.userInterface.removeStartScreen(()=>{});
+      // Show the Overlay
+      this.world.userInterface.displayTurnOverlay(Types.Opponent, 1);
     });
     // Opponent has ended his turn
     this.socket.on('Switch Turn', () => {
       this.world.raycaster.updatesEnabled = true;
+      this.world.incrementRound();
+      this.world.userInterface.displayTurnOverlay(Types.Player, this.world.round);
     });
   }
   emitFillTiles(letters) {
