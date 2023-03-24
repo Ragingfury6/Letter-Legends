@@ -9,6 +9,9 @@ import World from '../World/World';
 import assets from '../Utils/assets';
 import Controls from './Controls';
 
+import { GroundProjectedEnv } from 'three/examples/jsm/objects/GroundProjectedEnv';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default class Experience {
   static instance;
   constructor(canvas) {
@@ -25,7 +28,19 @@ export default class Experience {
     this.resources = new Resources(assets);
     this.world = new World();
     this.controls = new Controls();
-    
+
+    // const hdrLoader = new RGBELoader();
+    // const envMap = hdrLoader.load('test.hdr');
+    // envMap.mapping = THREE.EquirectangularReflectionMapping;
+
+    // let env = new GroundProjectedEnv(envMap);
+    // env.scale.setScalar(500);
+    // this.scene.add(env);
+    // env.radius = 200;
+    // env.height = 20;
+    // this.scene.environment = envMap;
+
+    // this.scene.add(mesh);
 
     this.time.on('update', () => {
       this.update();

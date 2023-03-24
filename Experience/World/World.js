@@ -9,6 +9,7 @@ import Player from '../Player/Player';
 import UserInterface from './UserInterface';
 import Socket from '../Base/Socket';
 import Table from './Table';
+import TileEmitter from './TileEmitter';
 
 export default class World {
   constructor() {
@@ -25,6 +26,7 @@ export default class World {
       this.tiles = new Tiles();
       this.gameBoard = new GameBoard(50);
       this.table = new Table();
+      this.tileEmitter = new TileEmitter();
       this.playerTilesHolder = new TilesHolder(Types.Player);
       this.opponentTilesHolder = new TilesHolder(Types.Opponent);
       // this.player = new Player(Types.Player);
@@ -35,24 +37,27 @@ export default class World {
     });
   }
 
-  createPlayers(playerTiles, opponentTiles){
+  createPlayers(playerTiles, opponentTiles) {
     this.player = new Player(Types.Player, playerTiles);
     this.opponent = new Player(Types.Opponent, opponentTiles);
   }
 
   incrementRound() {
     // One round = Both players play
-    this.round+=0.5;
+    this.round += 0.5;
   }
 
   resize() {}
 
   update() {
-    if(this.raycaster){
+    if (this.raycaster) {
       this.raycaster.update();
     }
-    if(this.gameBoard){
+    if (this.gameBoard) {
       this.gameBoard.update();
+    }
+    if (this.tileEmitter) {
+      this.tileEmitter.update();
     }
   }
 }
