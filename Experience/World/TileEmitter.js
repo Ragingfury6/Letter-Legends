@@ -9,9 +9,9 @@ export default class TileEmitter {
     this.tileEmitter = this.resources.items.tileEmitter;
     this.tileEmitterScene = this.resources.items.tileEmitter.scene;
     this.time = this.experience.time;
-    this.initializeEmitter();
-    this.initializeAnimations();
-    document.addEventListener('keydown', () => this.play());
+    // this.initializeEmitter();
+    // this.initializeAnimations();
+    // document.addEventListener('keydown', () => this.play());
   }
   initializeEmitter() {
     this.tileEmitter = this.resources.items.tileEmitter;
@@ -31,11 +31,12 @@ export default class TileEmitter {
     this.action.repetitions = 2;
     this.action.timeScale = 0.01;
   }
+
   play() {
     this.action.reset();
     this.action.play();
   }
   update() {
-    this.mixer.update(this.time.delta);
+    // this.mixer.update(this.time.delta);
   }
 }

@@ -1,34 +1,41 @@
 import Experience from '../Base/Experience';
 import * as THREE from 'three';
+import { GUI } from 'lil-gui';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 export default class Table {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.world = this.experience.world;
     this.resources = this.experience.resources;
-    this.table = this.resources.items.table.scene;
-    this.initializeTable();
+    this.room = this.resources.items.Room.scene;
+    this.gui = new GUI();
+    this.initializeRoom();
+    this.initializeLights();
+    this.initializeShadows();
+
+    this.room.position.set(-100.35, -39.2, -26.2);
   }
-  initializeTable() {
-    console.log(this.resources.items.table);
-    // const material = new THREE.MeshPhysicalMaterial({
-    //     roughness: 0.7,
-    //     transmission: 1,
-    //     thickness: 1
-    //   });
-    // this.table.children.find(c=>c.name==="GlassTop").material = material;
-    this.table.children.splice(
-      this.table.children.findIndex((c) => c.name === 'Cube'),
-      1
-    );
-    this.table.children.splice(
-      this.table.children.findIndex((c) => c.name === 'Plane.001'),
-      1
-    );
-    this.table.scale.set(110, 110, 110);
-    this.table.position.z = 30;
-    this.table.position.y = -31.5;
-    this.table.position.x = 60;
-    this.scene.add(this.table);
+  initializeShadows() {
+    this.room.traverse((c) => {
+      if (c instanceof THREE.Mesh) {
+        c.castShadow = true;
+        console.log(c);
+        c.receiveShadow = true;
+      }
+    });
+  }
+  initializeLights() {
+    const rectLight = new THREE.RectAreaLight(0xffffff, 15, 150, 100);
+    const rectLightBackwards = new THREE.RectAreaLight(0xff0000, 15, 150, 75);
+    rectLight.rotation.x = Math.PI;
+    rectLight.position.set(-83.96, 34.77, -163.36);
+    rectLightBackwards.position.set(-83.96, 46.57, -163.36);
+    // const rectLightHelper = new RectAreaLightHelper(rectLight);
+    this.scene.add(rectLight, rectLightBackwards);
+  }
+  initializeRoom() {
+    this.room.scale.set(20, 20, 20);
+    this.scene.add(this.room);
   }
 }
