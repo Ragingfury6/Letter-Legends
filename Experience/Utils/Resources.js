@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { TextureLoader, WrapAroundEnding } from 'three';
 import Experience from '../Base/Experience';
 export default class Resources extends EventEmitter {
   constructor(assets) {
@@ -21,6 +22,7 @@ export default class Resources extends EventEmitter {
     this.loaders = {};
     this.loaders.GLTFLoader = new GLTFLoader();
     this.loaders.DRACOLoader = new DRACOLoader();
+    this.loaders.TextureLoader = new TextureLoader();
     this.loaders.DRACOLoader.setDecoderPath('/draco/');
     this.loaders.GLTFLoader.setDRACOLoader(this.loaders.DRACOLoader);
   }
@@ -28,6 +30,12 @@ export default class Resources extends EventEmitter {
     for (const asset of this.assets) {
       if (asset.type === 'glbModel') {
         this.loaders.GLTFLoader.load(asset.path, (file) => {
+          this.singleAssetLoaded(asset, file);
+        });
+      } else if (asset.type === 'texture') {
+        this.loaders.TextureLoader.load(asset.path, (file) => {
+          file.wrapS = file.wrapT = WrapAroundEnding;
+          // file.repeat.set(2, 2);
           this.singleAssetLoaded(asset, file);
         });
       }

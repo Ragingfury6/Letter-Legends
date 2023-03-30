@@ -9,7 +9,7 @@ export default class Table {
     this.world = this.experience.world;
     this.resources = this.experience.resources;
     this.room = this.resources.items.Room.scene;
-    this.gui = new GUI();
+    // this.gui = new GUI();
     this.initializeRoom();
     this.initializeLights();
     this.initializeShadows();
@@ -27,7 +27,12 @@ export default class Table {
   }
   initializeLights() {
     const rectLight = new THREE.RectAreaLight(0xffffff, 15, 150, 100);
-    const rectLightBackwards = new THREE.RectAreaLight(0xff0000, 15, 150, 75);
+    const rectLightBackwards = new THREE.RectAreaLight(
+      new THREE.Color('#fff5b6'),
+      15,
+      150,
+      75
+    );
     rectLight.rotation.x = Math.PI;
     rectLight.position.set(-83.96, 34.77, -163.36);
     rectLightBackwards.position.set(-83.96, 46.57, -163.36);

@@ -19,6 +19,7 @@ export default class TilesHolder {
     this.inventoryArrangement = { x: 10, z: 5 };
     this.inventory = [];
     this.nextOpenInventorySlot = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    this.resources = this.experience.resources;
     this.initializeHolder();
   }
   initializeHolder() {
@@ -28,7 +29,12 @@ export default class TilesHolder {
       this.size.z
     );
     this.tileHolderMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#ddd'),
+      color: new THREE.Color('#444'),
+      map: this.resources.items.Wood_Map,
+      aoMap: this.resources.items.Wood_AO,
+      bumpMap: this.resources.items.Wood_Bump,
+      metalnessMap: this.resources.items.Wood_Gloss,
+      normalMap: this.resources.items.Wood_Normal,
     });
     this.tileHolder = new THREE.Mesh(
       this.tileHolderGeometry,

@@ -24,18 +24,23 @@ export default class UserInterface {
     this.startScreenInstructions = document.querySelector(
       '.start-screen-instructions'
     );
-    this.backButton = document.querySelector(".back");
+    this.backButton = document.querySelector('.back');
+
+    this.lettersUpgradeCost = 20;
 
     document
       .querySelector('.endTurn')
       .addEventListener('click', () => this.handleEndTurn());
+    document
+      .querySelector('.upgrade-letters')
+      .addEventListener('click', () => this.handleLettersUpgrade());
     document
       .querySelector('.socketStart')
       .addEventListener('click', () => this.handleSocketConnection());
     document
       .querySelector('.instructions')
       .addEventListener('click', () => this.handleInstructions());
-      this.backButton.addEventListener("click", () => this.handleBackButton());
+    this.backButton.addEventListener('click', () => this.handleBackButton());
   }
   handleEndTurn() {
     console.log(this.world.playerTilesHolder.nextOpenInventorySlot);
@@ -133,7 +138,9 @@ export default class UserInterface {
       this.world.raycaster.updatesEnabled = false;
       this.socket.emitSwitchTurn();
       // Add new tiles to inventory
-      const generatedTiles = Letters.generateTiles(4);
+      const generatedTiles = Letters.generateTiles(
+        this.world.gameBoard.newLettersPerTurn
+      );
       generatedTiles.forEach((t, idx) =>
         this.allTiles.fillInventoryWithTileByLetterName(
           t,
@@ -150,21 +157,45 @@ export default class UserInterface {
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, false);
     }
   }
+  handleLettersUpgrade() {
+    const totalMoney =
+      Number(this.money.getAttribute('data-value')) - this.lettersUpgradeCost;
+    if (totalMoney >= 0) {
+      this.money.textContent = `$${totalMoney}`;
+      this.lettersUpgradeCost = Math.ceil(
+        this.lettersUpgradeCost * Math.sqrt(2)
+      );
+      this.world.gameBoard.newLettersPerTurn++;
+    }
+  }
   handleSocketConnection() {
-    this.removeStartScreen(()=>{
+    this.removeStartScreen(() => {
       const playerTiles = Letters.generateTiles(10);
       const opponentTiles = Letters.generateTiles(10);
       this.world.createPlayers(playerTiles, opponentTiles);
       this.socket.emitGameStart(opponentTiles, playerTiles);
       this.displayTurnOverlay(Types.Player, 1);
-    })
+    });
   }
-  displayTurnOverlay(turn, round){
-    document.querySelector(".turn-overlay > h2").textContent = `Round ${Math.floor(round)} / 30`;
-    document.querySelector(".turn-overlay > p").textContent = `${turn === Types.Player ? "Your" : "Opponent\'s"} Turn`;
-    gsap.fromTo('.turn-overlay', {xPercent:0}, {xPercent:200, duration:4, ease:SlowMo.ease.config(0.1,0.9), delay:2});
+  displayTurnOverlay(turn, round) {
+    document.querySelector(
+      '.turn-overlay > h2'
+    ).textContent = `Round ${Math.floor(round)} / 30`;
+    document.querySelector('.turn-overlay > p').textContent = `${
+      turn === Types.Player ? 'Your' : "Opponent's"
+    } Turn`;
+    gsap.fromTo(
+      '.turn-overlay',
+      { xPercent: 0 },
+      {
+        xPercent: 200,
+        duration: 4,
+        ease: SlowMo.ease.config(0.1, 0.9),
+        delay: 2,
+      }
+    );
   }
-  removeStartScreen(afterTransition){
+  removeStartScreen(afterTransition) {
     this.startScreen.classList.add('opacity-0');
     this.startScreen.addEventListener('transitionend', () => {
       this.startScreen.classList.add('hidden');
@@ -174,19 +205,22 @@ export default class UserInterface {
   handleInstructions() {
     this.startScreen.classList.add('zoomed');
     this.startScreenContent.classList.add('shift-right');
-    const shiftLeft = () =>  {
+    const shiftLeft = () => {
       this.startScreenInstructions.classList.remove('shift-left');
       this.startScreenContent.removeEventListener('transitionend', shiftLeft);
-  };
+    };
     this.startScreenContent.addEventListener('transitionend', shiftLeft);
   }
-  handleBackButton(){
+  handleBackButton() {
     this.startScreenInstructions.classList.add('shift-left');
-    const shiftLeft = () =>  {
+    const shiftLeft = () => {
       this.startScreenContent.classList.remove('shift-right');
-      this.startScreenInstructions.removeEventListener('transitionend', shiftLeft);
+      this.startScreenInstructions.removeEventListener(
+        'transitionend',
+        shiftLeft
+      );
       this.startScreen.classList.remove('zoomed');
-  };
+    };
     this.startScreenInstructions.addEventListener('transitionend', shiftLeft);
   }
 }
