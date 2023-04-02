@@ -20,7 +20,7 @@
 - Money is granted after every time you play a word
 - Harder letters such as "X", "Q", and "W" will grant more money as opposed to vowels or common consonants
 - Any word longer than three letters is given a multiplier based on how long it is
-### Upgrades
+### Advanced Features
 - To access the upgrades, click the arrow on the right of your screen to pull out the menu, and purchase upgrades if you have enough money
 #### Letters Per Turn Upgrade
 - Upgrading this will give you more letters back every time you end your turn.
