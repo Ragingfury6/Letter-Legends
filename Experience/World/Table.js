@@ -9,18 +9,25 @@ export default class Table {
     this.world = this.experience.world;
     this.resources = this.experience.resources;
     this.room = this.resources.items.Room.scene;
+    this.spaceship = this.room.children.find(c=>c.name==="Space");
     // this.gui = new GUI();
     this.initializeRoom();
     this.initializeLights();
     this.initializeShadows();
+    this.initializeAnimations();
 
     this.room.position.set(-100.35, -39.2, -26.2);
+  }
+  initializeAnimations(){
+    // const mixer = new THREE.AnimationMixer( mesh );
+    this.room.traverse(c=>{
+      if(c.animations.length > 0) console.log(c)
+    });
   }
   initializeShadows() {
     this.room.traverse((c) => {
       if (c instanceof THREE.Mesh) {
         c.castShadow = true;
-        console.log(c);
         c.receiveShadow = true;
       }
     });

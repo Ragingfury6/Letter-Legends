@@ -1,16 +1,17 @@
-import * as THREE from 'three';
-import Sizes from '../Utils/Sizes';
-import Time from '../Utils/Time';
-import Resources from '../Utils/Resources';
+import * as THREE from "three";
+import Sizes from "../Utils/Sizes";
+import Time from "../Utils/Time";
+import Resources from "../Utils/Resources";
 
-import Camera from './Camera';
-import Renderer from './Renderer';
-import World from '../World/World';
-import assets from '../Utils/assets';
-import Controls from './Controls';
+import Camera from "./Camera";
+import Renderer from "./Renderer";
+import World from "../World/World";
+import assets from "../Utils/assets";
+import Controls from "./Controls";
 
-import { GroundProjectedEnv } from 'three/examples/jsm/objects/GroundProjectedEnv';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { GroundProjectedEnv } from "three/examples/jsm/objects/GroundProjectedEnv";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import AudioController from "./AudioController";
 
 export default class Experience {
   static instance;
@@ -28,6 +29,12 @@ export default class Experience {
     this.resources = new Resources(assets);
     this.world = new World();
     this.controls = new Controls();
+    this.audioController = new AudioController();
+    this.audioController.on("loaded", () =>
+      setTimeout(() => {
+        this.audioController.playSound("Background", true);
+      }, 1000)
+    );
 
     // const hdrLoader = new RGBELoader();
     // const envMap = hdrLoader.load('test.hdr');
@@ -42,11 +49,11 @@ export default class Experience {
 
     // this.scene.add(mesh);
 
-    this.time.on('update', () => {
+    this.time.on("update", () => {
       this.update();
     });
 
-    this.sizes.on('resize', () => {
+    this.sizes.on("resize", () => {
       this.resize();
     });
   }

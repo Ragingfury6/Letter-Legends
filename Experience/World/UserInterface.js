@@ -13,6 +13,7 @@ import { SlowMo } from 'gsap/all';
 export default class UserInterface {
   constructor() {
     this.experience = new Experience();
+    this.audioController = this.experience.audioController;
     this.controls = this.experience.controls;
     this.world = this.experience.world;
     this.allTiles = this.world.tiles;
@@ -150,6 +151,7 @@ export default class UserInterface {
       );
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, true);
       this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true);
+      this.audioController.playSound("Money");
       this.world.incrementRound();
       this.displayTurnOverlay(Types.Opponent, this.world.round);
       this.socket.emitFillTiles(generatedTiles);
@@ -160,11 +162,14 @@ export default class UserInterface {
   handleLettersUpgrade() {
     const totalMoney =
       Number(this.money.getAttribute('data-value')) - this.lettersUpgradeCost;
+      console.log(totalMoney)
     if (totalMoney >= 0) {
       this.money.textContent = `$${totalMoney}`;
+      this.money.setAttribute('data-value', totalMoney);
       this.lettersUpgradeCost = Math.ceil(
         this.lettersUpgradeCost * Math.sqrt(2)
       );
+      document.querySelector(".upgrade-letters-cost").textContent = `New Letters Per Turn · $${this.lettersUpgradeCost}`;
       this.world.gameBoard.newLettersPerTurn++;
     }
   }

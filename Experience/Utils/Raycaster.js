@@ -8,6 +8,7 @@ import PulsatingShader from '../Shaders/PulsatingShader';
 export default class Raycaster {
   constructor() {
     this.experience = new Experience();
+    this.audioController = this.experience.audioController;
     this.scene = this.experience.scene;
     this.world = this.experience.world;
     this.controls = this.experience.controls;
@@ -63,6 +64,7 @@ export default class Raycaster {
           this.world.playerTilesHolder.removeFromInventory(
             this.intersectingTile.object.positionInInventory
           );
+          this.audioController.playSound("TilePlayed");
           this.controls.beginAnimationFromCamera(Curves.DefaultPosition, true);
           // emit to opponent
           // this.socket.emitTilePlayed(this.intersectingTile);
