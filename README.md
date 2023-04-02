@@ -24,5 +24,8 @@
 - To access the upgrades, click the arrow on the right of your screen to pull out the menu, and purchase upgrades if you have enough money
 #### Letters Per Turn Upgrade
 - Upgrading this will give you more letters back every time you end your turn.
+#### Strategy
+- As your opponent's tiles are not hidden from your view, it may be useful to see what they have before playing your word
+- Ex. not playing a word that can be made plural with an "S" if your opponent has one.
 
 
