@@ -6,7 +6,9 @@
 ## Object of the the Game
 - Be the player with the most money at the end of a certain number of rounds
 ## How to Play
-- Create words by using the letters in your hand combined with the letters on the board. All words must be connected like crosswords. Tiles can only be played in one direction on your turn, but this still allows you to create multiple words.
+- Create words by using the letters in your hand combined with the letters on the board
+- All words must be connected like crosswords
+- Tiles can only be played in one direction on your turn, but this still allows you to create multiple words per turn.
 ### On Your Turn
 - Left click a tile in your hand to select it
 - After this, simply move your mouse to the position where you want to play the tile
@@ -15,9 +17,11 @@
 ### Ending The Turn
 - To end your turn after you have played a word, simply click the arrow on the right side of your screen to pull out the menu, and click the end turn button.
 ### Money System
-- Money is granted after every time you play a word. Harder letters such as "X", "Q", and "W" will grant more money as opposed to vowels or common consonants. Any word longer than three letters is given a multiplier based on how long it is.
+- Money is granted after every time you play a word
+- Harder letters such as "X", "Q", and "W" will grant more money as opposed to vowels or common consonants
+- Any word longer than three letters is given a multiplier based on how long it is
 ### Upgrades
-- To access the upgrades, click the arrow on the right of your screen to pull out the menu, and purchases upgrades if you have enough money
+- To access the upgrades, click the arrow on the right of your screen to pull out the menu, and purchase upgrades if you have enough money
 #### Letters Per Turn Upgrade
 - Upgrading this will give you more letters back every time you end your turn.
 
