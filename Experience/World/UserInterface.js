@@ -19,6 +19,8 @@ export default class UserInterface {
     this.allTiles = this.world.tiles;
     this.socket = this.world.socket;
     this.money = document.querySelector('.money');
+    this.yourMoney = document.querySelector('.money-self');
+    this.opponentMoney = document.querySelector('.money-opponent');
 
     this.startScreen = document.querySelector('.start-screen');
     this.startScreenContent = document.querySelector('.start-screen-content');
@@ -132,12 +134,12 @@ export default class UserInterface {
       );
       const totalMoney =
         Number(this.money.getAttribute('data-value')) + moneyEarned;
-      this.money.textContent = `$${totalMoney}`;
+      this.yourMoney.textContent = `You - $${totalMoney}`;
       this.money.setAttribute('data-value', totalMoney);
       this.world.gameBoard.tilesPlayedOnThisTurn = [];
       // Emit a switch turn event
       this.world.raycaster.updatesEnabled = false;
-      this.socket.emitSwitchTurn();
+      this.socket.emitSwitchTurn(totalMoney);
       // Add new tiles to inventory
       const generatedTiles = Letters.generateTiles(
         this.world.gameBoard.newLettersPerTurn
@@ -159,12 +161,16 @@ export default class UserInterface {
       this.world.gameBoard.applyShaderAfterEndTurn(indexesFromGameboard, false);
     }
   }
+  updateMoneyValueForOpponent(totalMoney){
+    this.money.setAttribute("opponent-value", totalMoney);
+    this.opponentMoney.textContent = `Opponent - $${totalMoney}`;
+  }
   handleLettersUpgrade() {
     const totalMoney =
       Number(this.money.getAttribute('data-value')) - this.lettersUpgradeCost;
       console.log(totalMoney)
     if (totalMoney >= 0) {
-      this.money.textContent = `$${totalMoney}`;
+      this.yourMoney.textContent = `You - $${totalMoney}`;
       this.money.setAttribute('data-value', totalMoney);
       this.lettersUpgradeCost = Math.ceil(
         this.lettersUpgradeCost * Math.sqrt(2)
@@ -185,7 +191,7 @@ export default class UserInterface {
   displayTurnOverlay(turn, round) {
     document.querySelector(
       '.turn-overlay > h2'
-    ).textContent = `Round ${Math.floor(round)} / 30`;
+    ).textContent = `Round ${Math.floor(round)} / 10`;
     document.querySelector('.turn-overlay > p').textContent = `${
       turn === Types.Player ? 'Your' : "Opponent's"
     } Turn`;

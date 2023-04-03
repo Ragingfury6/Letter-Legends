@@ -33,7 +33,7 @@ export default class Experience {
     this.audioController.on("loaded", () =>
       setTimeout(() => {
         this.audioController.playSound("Background", true);
-      }, 1000)
+      }, 2000)
     );
 
     // const hdrLoader = new RGBELoader();

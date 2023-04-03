@@ -8,7 +8,7 @@ export default class Socket {
     this.allTiles = this.world.tiles;
     this.gameBoard = this.world.gameBoard;
     this.opponentTilesHolder = this.world.opponentTilesHolder;
-    this.socket = io('http://localhost:3001', { withCredentials: true });
+    this.socket = io('http://localhost:3002', { withCredentials: true });
     this.onEvents();
   }
   onEvents() {
@@ -61,10 +61,11 @@ export default class Socket {
       this.world.userInterface.displayTurnOverlay(Types.Opponent, 1);
     });
     // Opponent has ended his turn
-    this.socket.on('Switch Turn', () => {
+    this.socket.on('Switch Turn', (totalMoney) => {
       this.world.raycaster.updatesEnabled = true;
       this.world.incrementRound();
       this.world.userInterface.displayTurnOverlay(Types.Player, this.world.round);
+      this.world.userInterface.updateMoneyValueForOpponent(totalMoney);
     });
   }
   emitFillTiles(letters) {
@@ -79,7 +80,7 @@ export default class Socket {
   emitGameStart(playerTiles, opponentTiles) {
     this.socket.emit('Game Start', { playerTiles, opponentTiles });
   }
-  emitSwitchTurn() {
-    this.socket.emit('Switch Turn');
+  emitSwitchTurn(totalMoney) {
+    this.socket.emit('Switch Turn', totalMoney);
   }
 }

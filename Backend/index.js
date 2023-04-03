@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-const io = new Server(3001, {
+const io = new Server(3002, {
   cors:{
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
   socket.on("Game Start", (tiles)=>{
     socket.broadcast.emit("Game Start", tiles);
   });
-  socket.on("Switch Turn", ()=>{
-    socket.broadcast.emit("Switch Turn");
+  socket.on("Switch Turn", (totalMoney)=>{
+    socket.broadcast.emit("Switch Turn", totalMoney);
   })
 });
