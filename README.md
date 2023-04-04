@@ -16,6 +16,7 @@
 - Click once more to confirm the play
 ### Ending The Turn
 - To end your turn after you have played a word, simply click the arrow on the right side of your screen to pull out the menu, and click the end turn button.
+- Two new letters are given to you after every turn, but this can be improved with upgrades.
 ### Money System
 - Money is granted after every time you play a word
 - Harder letters such as "X", "Q", and "W" will grant more money as opposed to vowels or common consonants
